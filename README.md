@@ -10,9 +10,13 @@ Full innovation credits for this lab goes to [XINTRA's team](https://www.xintra.
 More information about the labs can be found [here](https://www.xintra.org/labs).
 
 ## Repo:
-This time around, I've uploaded the walkthrough as one [singular scroll]() 📜
-- For those who'd like to read the entire walkthrough as one [singular scroll](https://github.com/Ragmthy/Xintra_Waifu_Uni_Walkthrough/tree/main/Complete%20Walkthrough) 
+This time around, I've uploaded the walkthrough as one [singular scroll](https://github.com/Ragmthy/Xintra_Airbuzzed_Walkthrough/blob/main/Airbuzzed%20Lab%20Walkthrough%20-%20Final.md) 📜
   
 - Will need more time to push it up section by section at a later date.
 
 ### Extra Resources that helped along the way:
+1. Understanding of [LNK files](https://belkasoft.com/forensic-analysis-of-lnk-files)
+2. Deeper dive about the MFTECmd and [timestomping concept](https://www.youtube.com/watch?v=_qElVZJqlGY&t=860s)
+3. Location of [Powershell Transcipt artifacts](https://www.magnetforensics.com/blog/the-importance-of-powershell-logs-in-digital-forensics/)
+4. Understanding [Linux-based artifacts](https://trustedsec.com/blog/incident-response-bring-out-the-body-file)
+5. VirusTotal for [deciphering out values](https://www.virustotal.com/gui/home/upload)
