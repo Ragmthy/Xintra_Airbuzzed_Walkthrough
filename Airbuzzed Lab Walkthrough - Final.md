@@ -14,7 +14,7 @@ First section of the network to grasp first: Internet to ELK connections.
 
 From the internet, any external user from a trusted IP will be able to reach the public domain "elk.airbuzz.space" via the HTTP protocol (Port 443/TCP).  *Because, next to the Internet logo; there's a statement about "Only trusted IPs will be allowed for inbound traffic". 
 
-Food for thought: the domain itself has 'elk' in its title. What that might mean is that the narrowed subsection of inbound traffic from trusted IPs </br>
+Food for thought: the domain itself has 'elk' in its title. What that might mean is that the narrowed subsection of inbound traffic from trusted IPs: </br>
 i. can reach the "elk.airbuzz.space" domain on HTTP </br>
 ii. get access into ABZ-ELK-01 due to 1-to-1 mapping of its virtual Public IP to its private IP. </br>
 
@@ -25,31 +25,31 @@ This relatively "direct" access into an ELK server is something to think about. 
 We'll discuss the other node of ABZ-ELK-01 on private IP 10.0.0.5 later. But noticing the protocols it allows (SSH and Fleet connection), and its lack of exposure to the internet, highly likely its purpose is to collect telemetry from the other internal servers/devices of the Airbuzzed Internal network. 
 
 ### 1b. Internet to DMZ to Production/Office subnets
-And now, the second section of the network to grasp: Internet to the necessary production/office networks (via a DMZ).
+And now, the second section of the network: Internet to the necessary production/office networks (via a DMZ).
 
 ![image](network_images/part_two_internet_to_internal_network.jpg)
 
-This part of the network is something familiar (to the Waifu University lab for example). 
+This part of the network is something familiar (to the Waifu University lab, for example). 
 
 Anyone, from Airbuzzed who has access to the domain, once authenticated in the DMZ part of the network, should be able to connect to the production network.
 
-Let's take it step-by-step, assuming one's trying to connect into the production network or office network. 
+Let's take it step-by-step, assuming one's trying to connect to the production network or office network. 
 
 #### 1bi. Internet to DMZ 
-Airbuzzed employees' (if outside of their office) requests comes through a Virtual Public IP associated to ABZ-PRX-01 (10.0.1.4) via the protocols shown (HTTPS, HTTP, SSH). </br>
+Airbuzzed employees' (if outside of their office) requests come through a Virtual Public IP associated with ABZ-PRX-01 (10.0.1.4) via the protocols shown (HTTPS, HTTP, SSH). </br>
 
-These requests hit the NGINX proxy and routes them to the appropriate internal subnetwork (either prod or office), based on the request features (domain name, path, headers).
+These requests hit the NGINX proxy and are routed to the appropriate internal subnetwork (either prod or office), based on the request features (possibly domain name, path, headers).
 
 #### 1bii. DMZ to any required Production or Office subnets
 From ABZ-PRX-01, there are 3 ways traffic gets forwarded to the internal subnets:
 
 1. DMZ to Production subnet </br>
 Focusing on the cyan arrow: RDP/3389 protocol is utilised in 2 out of the 3 devices in the Prod subnet (the Domain Controller - ABZ-DC-01 and the File Server - ABZ-FS-01). A potential reason why this may be allowed for both cases would be: </br>
-i. For the Domain Controller, admins might use RDP for domain/user group managements. </br>
+i. For the Domain Controller, admins might use RDP for domain/user group management. </br>
 ii. For the File Server, someone with sufficient permission to manage file shares/backups 
 
 2. DMZ to Office subnet </br>
-Focusing on the cyan arrow: RDP/3389 is the protocol used in connecting into the Office network devices (ABZ-PC-01 and -02). Why this could be allowed is likely for remote support or administrative access to an end-user machine. 
+Focusing on the cyan arrow: RDP/3389 is the protocol used in connecting to the Office network devices (ABZ-PC-01 and -02). Why this could be allowed is likely to allow remote support or administrative access to an end-user machine. 
 
 3. DMZ to ABZ-APP-01 server (directly) </br>
 Lastly, focusing on the internet traffic forwarded from the internet to ABZ-PRX-01 to ABZ-APP-01. Take note: the same protocols are in use all the way through to APP-01. 
@@ -63,7 +63,7 @@ ii. The green 'management.airbuzz.space' arrow - The traffic from the internet i
 There's an extra detail here: 'management.airbuzz.space' is a domain name. If only the request comes for `https://management.airbuzz.space`, then it can be passed to ABZ-APP-01. This isolates and routes traffic based on this domain name condition. 
 
 #### 1biii. Connections between the Office and Production networks
-Now, connections from the internet into the Airbuzzed network has been understood. Let's now see if internal subnets communicate with each other. 
+Now, connections from the internet into the Airbuzzed network have been understood. Let's now see if internal subnets communicate with each other. 
 
 ![image](network_images/part_three_between_subnets.jpg)
 
@@ -79,7 +79,7 @@ Both these subnets, alongside ABZ-PRX-01, are logged into ABZ-ELK-01 at 10.0.0.5
 #### 1c. Connections from Airbuzzed network to the Internet </br>
 Now, lastly, after all the inbound connections reach their respective destinations inside Airbuzzed with all the configurations from above, let's see how they reach back the internet, to the original devices that would've made these requests into Airbuzzed. 
 
-The Airbuzzed devices (either from Office or Production), will route its outbound reply traffic through the NAT gateway. It'll translate their private IP address to a public IP, and traffic reaches the internet with this NAT Gateway's public facing IP address. 
+The Airbuzzed devices (either from Office or Production) will route their outbound reply traffic through the NAT gateway. It'll translate their private IP address to a public IP, and traffic reaches the internet with this NAT Gateway's public facing IP address. 
 
 And that concludes the Network Breakdown and flow, to and fro from Airbuzzed. </br>
 Onwards to solving the lab now.
@@ -89,7 +89,7 @@ Onwards to solving the lab now.
 #### Section 2a: Social Engineering
 As per the scoping note, it's understood that a developer's workstation has some C2 samples loaded to their workstation. They appeared as a result of downloading some recruiter's technical task's archive folder. 
 
-From our understanding of the network above, a developer's workstation would probably be in the Office subnet, and the device would either be ABZ-PC-01 or 02. We've also been given the developer's name in question (Rebecca Dean), and so before moving forward in the lab, let's first see; between the devices, which one she's a user in. Seeing the triages available, it's noted she's in ABZ-PC-01. 
+From our understanding of the network above, a developer's workstation would probably be in the Office subnet, and the device would either be ABZ-PC-01 or 02. We've also been given the developer's name in question (Rebecca Dean), and so before moving forward in the lab, let's first see; between the devices, which one she's a user of. Seeing the triages available, it's noted she's in ABZ-PC-01. 
 
 ![image](lab_qns_images/00_developer_pc.jpg)
 
@@ -103,7 +103,7 @@ Analysing that (in the XstReader tool), we can see some of rdean's activity with
 
 For instance, what's of importance here are: </br>
 
-1. Sharing of a public SSH key for a code server from which she can update a project, at 3rd June 2024, 9:14:46am (the full timestamp can be seen from the properties toggle on the bottom RH corner): </br>
+1. Sharing of a public SSH key for a code server from which she can update a project, on 3rd June 2024, 9:14:46am (the full timestamp can be seen from the properties toggle on the bottom RH corner): </br>
 
 ![image](lab_qns_images/04_public_ssh_Key.jpg)
 
@@ -115,7 +115,7 @@ For instance, what's of importance here are: </br>
 
 ![image](lab_qns_images/05_py_package_add_in.jpg)
 
-Initially, it was not fully known that the archive folder from Linkedin contained malicious files. Due to its clever disguise, the next thing to do is to investigate it further with some portion of the triage. As it's known that rdean's workstation is ABZ-PC-01, the first thing to acquire from it is the $MFT file. The Master File Table keeps records of all files in a volume and the $MFT is a system generated file that tracks all that information about the files on a system, including their physical locations on the disk, timestamps, names, sizes. 
+Initially, it was not fully known that the archive folder from Linkedin contained malicious files. Due to its clever disguise, the next thing to do is to investigate it further with some portion of the triage. As it's known that rdean's workstation is ABZ-PC-01, the first thing to acquire from it is the $MFT file. The Master File Table keeps records of all files in a volume and is a system generated file that tracks information like a system files' physical locations on the disk, timestamps, names, sizes. 
 
 ![image](lab_qns_images/06_mft_file_found.jpg)
 
@@ -125,11 +125,11 @@ To parse it, the MFTECmd tool by Eric Zimmerman was a handy one. In order to par
 
 ![image](lab_qns_images/06_parsing_MFT.jpg)
 
-After that, using the resultant CSV, and exploring it in the Timeline tool, the file's Host URL is visible in the Zone ID contents. This file, was last accessed in 19th June 2024, 09:55:48am. 
+After that, using the resultant CSV, and exploring it in the Timeline tool, the file's Host URL is visible in the Zone ID contents. This file was last accessed on 19th June 2024, 09:55:48am. 
 
 ![image](lab_qns_images/07_host_url_of_quiz_file.jpg)
 
-In addition that, within the Quiz.rar, there's a file that can contain the hostname of the attacker's workstation. 
+Additionally, within the Quiz.rar, there's a file that can contain the hostname of the attacker's workstation. 
 
 Amongst the files within the folder: </br>
 ![image](lab_qns_images/08_lnk_file_in_quiz_rar.jpg) 
@@ -143,7 +143,7 @@ For that, the LECmd tool from Eric Zimmerman helped, with a similar command like
 When scrolled down, the attacker's hostname became visible: </br>
 ![image](lab_qns_images/09_Desktop_title.jpg)
 
-When analysed further, we can also see how long ago this Quiz file had been created. The fact that it had an origin date of 2021, shows that this campaign of infiltrating companies' systems has a long history. 
+When analysed further, we can also see how long ago this Quiz file was created. The fact that it had an origin date of 2021, shows that this campaign of infiltrating companies' systems has a long history. 
 
 ![image](lab_qns_images/10_lnk_file_creation.jpg)
 
@@ -179,9 +179,9 @@ And that concludes the first portion of the Airbuzzed Lab: Social Engineering.
 #### Section 2b: Patient Zero
 So far, it's been understood ABZ-PC-01 is the first device in the Airbuzzed network that came in contact with the malicious folder, Quiz.rar. From this point on, it would make sense that the threat actor would want to persist in the system, and possibly iterate through to see how Airbuzzed is configured. And likely so, the lab guides us to find a persistence TTP that was likely used: Scheduled task to execute at system start-up. 
 
-This event would've had to happen after the Quiz.rar file was downloaded from Linkedin at June 19th 2024, 09:55:48am. Assuming that the threat actor would prefer to get a foothold into the system in the first 24 hours, the logs were cut off at June 20th 2024 at midnight.
+This event would've had to happen after the Quiz.rar file was downloaded from Linkedin at June 19th 2024, 09:55:48am. Assuming that the threat actor would prefer to get a foothold into the system in the first 24 hours, the ELK logs to explore first were cut off on June 20th 2024 at midnight.
 
- Verifying that ABZ-PC-01 is a Windows machine, there's a high likelihood that a registry key's value would get set to that particular persistence task made by the threat actor. The potential two keys that might be feasible to explore are:
+Verifying that ABZ-PC-01 is a Windows machine, there's a high likelihood that a registry key's value would get set to that particular persistence task made by the threat actor. The potential two keys that might be feasible to explore are:
 
     `HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache` 
     `HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Tasks` 
@@ -193,7 +193,7 @@ At this point, the logs looked roughly like this:
 ![image](lab_qns_images/11a_narrowed_logs_of_registry_ks.jpg)
 
 
-Having this in sight, the next was to analyse the registry keys that are visible in these narrowed logs. 
+Having this in sight, the next is to analyse the registry keys that are visible in these narrowed logs. 
 
 ![image](lab_qns_images/11b_registry_keys_narrowed.jpg)
 
@@ -262,7 +262,7 @@ And that concludes the second part of the lab: Patient Zero.
 So far, here's what's understood about the attack: 
 
 1. The entry point of the malicious Quiz.rar was through ABZ-PC-01. 
-2. Once in that device, a scheduled task was created to happen at System Startup
+2. Once in that device, a scheduled task (HPSync02) was created to happen at System Startup
 3. It was also found out that another device, ABZ-FS-01, had some kind of Remote Monitoring and Management tool deployed in it, and this was almost 6 days after June 19th, on June 25th. 
 
 Definitely, the time in between would've been spent on discovering more details about the Airbuzzed system. Trying to decipher what happened in the days in between would be suitable to see through the TTPs deployed in the middle. 
@@ -297,7 +297,7 @@ First, looking up wbemcom.dll in the logs, let's first see when it entered the s
 
 ![image](lab_qns_images/20_wbemcomn_dll_into_sys.jpg)
 
-It first came into the system via a Invoke Web Request command back in June 19th, at around 20:29:31 hours. This was just before the time of the scheduled task was created (back in the Patient Zero section). 
+It first came into the system via an Invoke Web Request command back on June 19th, at around 20:29:31 hours. This was just before the time the scheduled task was created (back in the Patient Zero section). 
 
 Alongside it are two extra tools: servicehost.exe and wbemc.dll ~ all from the same domain of the threat actor's C2 server. 
 
@@ -364,7 +364,7 @@ Another technique the threat actor employed was keylogger to capture credentials
 
 ![image](lab_qns_images/29_proactive_keylogger_entering_system.jpg)
 
-In addition to stealing credentials, other techniques were used in the purpose to steal some intellectual property. It appeared that a screenshot function was also designed to take pictures of applications or code that Rebecca had been designing for Airbuzzed. When looking across all the Powershell Transcript from her `Documents` folder from above, only one of the script hints at a plausible file that was used in this process. 
+In addition to stealing credentials, other techniques were used with the purpose of stealing some intellectual property. It appeared that a screenshot function was also designed to take pictures of applications or code that Rebecca had been designing for Airbuzzed. When looking across all the Powershell Transcript from her `Documents` folder from above, only one of the script hints at a plausible file that was used in this process. 
 
 In the 20240620 folder, the Powershell script ending with 'FneAW....537' showed some hints that this mentions a screenshooting function. The presence of   `$graphics`, `CopyFromScreen` are parts of a powershell command that might be designed to screenshoot. And further above in the script, there is mention of a Host Application from which this particular powershell was hidden, and it used a .ps1 file from the Temp staging folder we've been observing so far. 
 
@@ -380,10 +380,10 @@ When looking at the entire script, there are some takeaways:
 
 1. The first section of interest in orange shows the naming convention given to every screenshot that is meant to be taken, beginning with 'DM' and then
 some set of 5 to 12 characters with a .dat extension. 
-2. The file path in which all these screenshots will get stored at - at the Themes folder of Windows in the User account. 
+2. The file path in which all these screenshots will get stored at - in the Themes folder of Windows in the User account. 
 3. The time difference between each screenshot will be 30 seconds.
 
-Amongst these files in the Themes folder, there's one in question that mentions a successful capture of Airbuzzed's code. So it's safe to say there was intention to get a hold of this piece of code that's probably Intellectual Property. 
+Amongst these files in the Themes folder, there's one in question that mentions a successful capture of Airbuzzed's code. So it's safe to say there was intention to get hold of this piece of code that's probably Intellectual Property. 
 
 ![image](lab_qns_images/32_filght_algo_screenshot.jpg)
 
@@ -414,12 +414,12 @@ There is a search log of interest by the user, and looking at that same log from
 
 ![image](lab_qns_images/37_web_search.jpg)
 
-It's something to keep in the back of the mind because this is an activity that happened not long before the download of Quiz.rar from Linkedin, just by half hour. Recent activity; web or locally on the device, would be of interest to a threat. 
+It's something to keep in the back of the mind because this is an activity that happened not long before the download of Quiz.rar from Linkedin, just by half hour. Recent activity, web or locally on the device, would be of interest to a threat. 
 
 And that concludes the fifth part of the lab: Browser History Insights. 
 
 #### Section 2f: Evasion Techniques 
-As of now, we've understood how the threat entered, how they maintained a persistence by creating a scheduled task, all the kinds of tools and arsenal they downloaded and kept in that 'Temp' folder with that Invoke-WebRequest command in powershell, how they stored and kept screenshots of Intellectual Property that was of interest, and credentials they managed to capture. 
+As of now, we've understood how the threat entered, how they maintained a persistence by creating a scheduled task, all the kinds of tools and arsenal they downloaded with that Invoke-WebRequest command in powershell and kept in that 'Temp' folder , how they stored and kept screenshots of Intellectual Property that was of interest, and credentials they managed to capture. 
 
 To have accomplished this undetected: some evasion techniques would've had to have happened, and that's what the next section will focus on. Seeing that the OS of ABZ-PC-01 is a Windows OS, there's a chance some of its in-built defender software parameters might be altered. 
 
@@ -433,12 +433,11 @@ Here, we see our staging 'Temp' folder where all downloads from the Threat's dom
 
 ![image](lab_qns_images/39_flag_for_settings.jpg)
 
-The command in the first snapshot speaks of retrieving out Windows Defender preferences that are set up in ABZ-PC-01. Amongst them is the setting for ExclusionPath. These settings are checked at 20:43:20 of June 19th 2024, and the exclusion path was set at 20:46:38 of the same day. 
+The command in the first snapshot speaks of retrieving out Windows Defender preferences that are set up in ABZ-PC-01. Amongst them is the setting for ExclusionPath. These settings are checked at 20:43:20, June 19th 2024, and the exclusion path was set at 20:46:38 of the same day. 
 
 The same can be witnessed in the ELK stack as well. 
 
 ![image](lab_qns_images/41_elk_ps_script_match.jpg)
-
 
 Now, the activity witnessed so far has been within ABZ-PC-01, the first computer in Airbuzzed that got infected. From the earlier section, in Credential Dumping, we've also witnessed a file `cred.yml` being accessed on June 24, 2024 at 22:14:41 in ABZ-APP-01. It is once again of interest in here, as there's a good chance that these might be further used, or deleted from the system. 
 
@@ -446,7 +445,7 @@ Looking into the bash history file of ABZ-APP-01, specifically as an `app` user,
 
 ![image](lab_qns_images/42_app_user_history_for_credyml.jpg)
 
-As this is our file of interest, let's analyze further to understand what's happened to cred.yml. When looking before what happens to creds.yml, this is witnessed. 
+As this is our file of interest, let's analyse further to understand what's happened to cred.yml. When looking before what happens to creds.yml, this is witnessed. 
 
 ![image](lab_qns_images/43_all_steps_taken_on_credsyml.jpg)
 
@@ -463,7 +462,7 @@ So, what this bash history shows is that this creds.yml file has been of interes
 The next thing to investigate was that a renamed binary was utilized to execute a Powershell Script remotely, aimed at disabling Windows Defender.
 If this had been a remote command, some field in ELK would've captured that hint.  
 
-Plus, earlier in the lab, in Section 2c of DLL Side Loading, we witnessed how a legitimate Windows binary was copied and renamed into something else. Specifically, `RtkBtManServ.exe`. Apart from witnessing that event, that was not seen again, but the timestamp of that log, is 25 June 2024, 08:26:39. 
+Plus, earlier in the lab, in Section 2c of DLL Side Loading, we witnessed how a legitimate Windows binary was copied and renamed into something else. Specifically, `RtkBtManServ.exe`. Apart from witnessing that event, which was not seen again, the timestamp of that log is 25 June 2024, 08:26:39. 
 
 We know that this binary is sitting inside the Temp folder inside PC-01, and has been kept like so.
 
@@ -471,7 +470,7 @@ Thus, with these hints, and some brute-forcing, we can see that it was indeed ut
 
 ![image](lab_qns_images/44_disable_of_windows_defender.jpg)
 
-Finally, the last things to check for was in ABZ-PC-02. This is a device that has not yet seen any suspicious activity, but is started to get roped in. For now, the ask is to see what files were deleted at a particular point in time, and its size. 
+Finally, the last thing to check for was in ABZ-PC-02. This is a device that has not yet seen any suspicious activity, but has started to get roped in. For now, the ask is to see what files were deleted at a particular point in time, and its size. 
 
 Looking into the PC-02 triage, we can see this is a workstation with one decipherable employee, Robert Carr. It is noted that he deleted a file in the early hours of 19th June 2024. 
 
@@ -482,7 +481,7 @@ Given a size of under 6.2kB, and the Filetype is $I - it is not the complete fil
 And that concludes this segment of the Airbuzzed Lab, Evasion Techniques. 
 
 #### Section 2g: Data Exfiltration
-So far, we've vetted through both the workstation PCs (01 mostly, 02), and seen through one server (FS-01) for all tools and activity that had indications of threat behaviour. Considering a company like Airbuzzed, and seeing that there was an interest in Intellectual Property, chances are some preparation to that file would've been done to exfiltrate it out of the Airbuzzed network. 
+So far, we've vetted through both the workstation PCs (01 mostly, 02), and seen through one server (FS-01) for all tools and activity that had indications of threat behaviour. Considering a company like Airbuzzed, and seeing that there was an interest in Intellectual Property, chances are some preparation for that file would've been done to exfiltrate it out of the Airbuzzed network. 
 
 But before proceeding further, there are other components inside the network that are not explored yet, and one of them is the Domain Controller, ABZ-DC-01. There is also activity from another user that's meant to be explored, and so the lab guides us into seeing the last named user's activity in ABZ-DC-01. 
 
@@ -526,7 +525,7 @@ That concludes this segment of the lab: Data Exfiltration.
 #### Section 2h: Payload Execution
 The other workstation of the office network, ABZ-PC-02 is under the spotlight again in this section. It is discovered, that in its Amcache, it too has a temp folder. And the file in question to see is `servicehost.exe` ~ which if we recall from earlier: had been in ABZ-PC-01's own temp folder, downloaded with an Invoke-WebRequest command, and used to make that persistent task 'HPSync02'. 
 
-It too has been found in PC-02, and worth to see what activity might have happened here with regard to it. When looking across at its Amcache files, we can see some properties about it like so:
+It too has been found in PC-02, and worth seeing what activity might have happened here with regard to it. When looking across at its Amcache files, we can see some properties about it like so:
 
 ![image](lab_qns_images/51_servicehost_pc_02_sha1.jpg)
 
@@ -540,7 +539,7 @@ And its specific SHA1 Hash:
 
 ![image](lab_qns_images/53_c2_pid_app01_sha1.jpg)
 
-Furthermore, there's also evidence of that executable running in tmp/lock ~ a temp folder with a process running in it. The owner of the process is a good field to investigate because it might have been one with a lot of permissions. 
+Furthermore, there's also evidence that executable running in tmp/lock ~ a temp folder with a process running in it. The owner of the process is a good field to investigate because it might have been one with a lot of permissions. 
 
 ![image](lab_qns_images/54_owner_of_process.jpg)
 
@@ -549,11 +548,11 @@ Seeing that the owner is `app`, it means that it's from a service account, and n
 And that concludes this segment of the lab: Payload Execution.
 
 #### Section 2i: Dissecting Network Logs
-Thus far, we've seen about the triages across all the devices within the Airbuzzed network. The next thing to see is the external infrastructure the internal devices were communicating with. 
+Thus far, we've seen about the triages across all the devices within the Airbuzzed network. The next thing to see is the external infrastructure that the internal devices were communicating with. 
 
 We firmly know that the first device was ABZ-PC-01 coming in contact with a server that belongs to the Threat Actor. And the domain in question might've already been seen in the earlier part of the lab. 
 
-For instance, from Section 2c: in DLL Sideloading, we've seen various Invoke Web-Request commands done to a 'downloadmirror.net' from ABZ-PC-01. I opted to filter out the ELK logs with respect to this domain, in that first day, June 19th, when Quiz.rar was downloaded. 
+For instance, from Section 2c: in DLL Sideloading, we've seen various Invoke Web-Request commands done to a 'downloadmirror.net' from ABZ-PC-01. Filtering out the ELK logs to this domain, in that first day, June 19th, when Quiz.rar was downloaded. 
 
 Across the logs, its IP and the relevant domain name was filtered. 
 
@@ -561,11 +560,11 @@ Across the logs, its IP and the relevant domain name was filtered.
 
 The next thing to look up was DNS queries of a RMM tool. So far, in the lab, we came across the TacticalRMM tool as being the one used in the attack. 
 
-When looking across it on ZUI, we can see its attached DNS query. 
+When looking at it on ZUI, we can see its attached DNS query. 
 
 ![image](lab_qns_images/64_tacticalrmm_dns_query.jpg)
 
-Lastly, the last portion of this section revolves around the ABZ-PRX-01 server. Since trying to understand the network configuration, we have not seen much about this server. The lab guides us in showing that various POST requests were made to ABZ-PRX-01, in the hopes to exploit a test endpoint. Why is this useful?
+Lastly, the last portion of this section revolves around the ABZ-PRX-01 server. Since trying to understand the network configuration, we have not seen much about this server. The lab guides us in showing that various POST requests were made to ABZ-PRX-01, in the hopes of exploiting a test endpoint. Why is this useful?
 
 ![image](lab_qns_images/66_understanding_TA_mechanism.jpg)
 
@@ -588,13 +587,13 @@ That concludes this segment of the lab: Mapping the Infrastructure.
 
 #### Section 2k: Threat Actors' Arsenal
 
-In this section, we're investigating deeper into the files that are to have threat actor origins, and extra details about them. Starting first, with this Process 55773. Given that it is of a C2 origin, then chances are, it might've been communicating with a certain domain. To investigate that, the best route is to see the triage about it that's been collected under ABZ-APP-01. 
+In this section, we're investigating deeper into the files that are suspected of having threat actor origins, and extra details about them. Starting first, with this Process 55773. Given that it is of a C2 origin, then chances are, it might've been communicating with a certain domain. To investigate that, the best route is to see the triage about it that's been collected under ABZ-APP-01. 
 
 ![image](lab_qns_images/56_process_55773_strings.jpg)
 
-When looking at its triage, and unzipping the original strings.txt.gz, a strings.txt file is formed. By default, when looking at other processes in the same directory, a strings folder is not there by default. The existence of this means that all readable strings from a binary were put together here, and it can contain IOC clues, so perhaps the domain the process was meant to speak to. 
+When looking at its triage, and unzipping the original strings.txt.gz, a strings.txt file is formed. By default, when looking at other processes in the same directory, a strings folder is not there. The existence of this means that all readable strings from a binary were put together here, and it can contain IOC clues, so perhaps the domain the process was meant to speak to. 
 
-After extracting the text file out with 7-Zip, the best tool that helped decipher the domain was SysInternal's string.exe.
+After extracting the text file with 7-Zip, the best tool that helped decipher the domain was SysInternal's string.exe.
 
 After copying it over to the Desktop, and changing the cmd directory to the SysInternal toolkit, with this command: `strings.exe C:\Users\PhotonUser\Desktop\strings.txt | findstr /i "http"`, some interesting results appear. 
 
@@ -602,19 +601,19 @@ After copying it over to the Desktop, and changing the cmd directory to the SysI
 
 This github link becomes known, and could have been the link APP-01 was directed to talk to. 
 
-Following that, the next artifact to look into came from the origin file, Quiz.rar. Within the folder, there's a suspicious cat.jpg file. Within the lab's toolkit, pestudio is one that could assist here in finding out its imphash. 
+Following that, the next artifact to look into came from the origin file, Quiz.rar. Within the folder, there's a suspicious cat.jpg file. Within the lab's toolkit, pestudio could assist here in finding out its imphash. 
 
 ![image](lab_qns_images/58_wrong_imphash.jpg)
 
-While it hadn't been the most accurate flag, another way to solve this is through the file's SHA256 value. A handy command in Powershell helped here to see if it's the same value that pestudio reflected. 
+While it hadn't been the most accurate flag, another way to solve this is through the file's SHA256 value. A handy command in Powershell helped here to see if it's the same value that pestudio reflected. Credits to this [other writeup](https://mashtitle.com/2025/06/09/airbuzzed-write-up) for teaching this stellar trick.
 
 ![image](lab_qns_images/59_crosscheck_sha256_manually.jpg)
 
-After noting that these two match, the next is to check its imphash from VirusTotal. 
+After noting that these two match, the next step is to check its imphash from VirusTotal. 
 
 ![image](lab_qns_images/60_correct_imphash_vt.jpg)
 
-Another suspicious package was also indicated by the lab, but not heavily seen until now. That is called `extract.exe`. When looking through the logs related to the package, it was downloaded into PC-01 through a Invoke-WebRequest command line, and set in the Temp folder we've seen most threat actor tools sit at. 
+Another suspicious package was also indicated by the lab, but not heavily seen until now. That is called `extract.exe`. When looking through the logs related to the package, it was downloaded into PC-01 through an Invoke-WebRequest command line, and set in the Temp folder we've seen most threat actor tools sit at. 
 
 ![image](lab_qns_images/61_extract_exe_desc.jpg)
 
@@ -622,9 +621,10 @@ Finally, the last threat actor tool of interest is the one from the earlier sect
 
 ![image](lab_qns_images/62_original_dll_filename.jpg)
 
-It's a known malicious DLL used by attackers to execute PowerShell commands in a more stealthy manner, and isn't all that normal in legitimate Windows Operations. 
+It's a known malicious DLL used by attackers to execute PowerShell commands more stealthily, and isn't all that normal in legitimate Windows Operations. 
 
-And that concludes this portion on Threat Actor's Arsenal and the entire Airbuzzed Lab! 
+##### And that concludes this portion on Threat Actor's Arsenal and the entire Airbuzzed Lab! Thanks for reading this far ~
+
 
 
 
