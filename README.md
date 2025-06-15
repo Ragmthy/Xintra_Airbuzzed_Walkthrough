@@ -18,4 +18,4 @@ This time around, I've uploaded the walkthrough as one [singular scroll](https:/
 3. Location of [Powershell Transcipt artifacts](https://www.magnetforensics.com/blog/the-importance-of-powershell-logs-in-digital-forensics/)
 4. Understanding [Linux-based artifacts](https://trustedsec.com/blog/incident-response-bring-out-the-body-file)
 5. VirusTotal for [deciphering out values](https://www.virustotal.com/gui/home/upload)
-6. Another Aibuzzed [WriteUp](https://mashtitle.com/2025/06/09/airbuzzed-write-up) for teaching a stellar trick ~
+6. Another Airbuzzed [WriteUp](https://mashtitle.com/2025/06/09/airbuzzed-write-up) for teaching a stellar trick ~
