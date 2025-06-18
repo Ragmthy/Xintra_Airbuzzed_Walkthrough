@@ -2,7 +2,7 @@
 A walkthrough for the Airbuzzed Lab created by Xintra
 
 # XINTRA LABS (Airbuzzed)
-Creating a Repository of Walkthrough for Waifu Lab created by [XINTRA](https://www.xintra.org/). 
+Creating a Repository of Walkthrough for Airbuzzed Lab created by [XINTRA](https://www.xintra.org/). 
 
 Like the first XINTRA lab attempted, the goal of this repository is to document my notes and thought processes for each section of the Airbuzzed one. 
 Full innovation credits for this lab goes to [XINTRA's team](https://www.xintra.org/#:~:text=Learn%20from%20our%0AExperienced%20Trainers) and other respective [contributors](https://www.xintra.org/labs#:~:text=BEHIND%20THE%20LAB-,Lab%20Contributors,-Each%20lab%20is). 
