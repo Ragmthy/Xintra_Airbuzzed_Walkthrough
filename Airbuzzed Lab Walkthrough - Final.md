@@ -282,7 +282,7 @@ Essentially, rundll32 is used to load and execute the `main` function inside the
 
 So, this log at 2024-06-25 08:26:39am tells us the first process that was created by this malicious DLL, and we've learnt the Base64 string in the argument is shown above. Deciphering that using Cyberchef like so: 
 
-![image](lab_qns_images\19_decipher_base64string.jpg)
+![image](lab_qns_images/19_decipher_base64string.jpg)
 
 The result shows that `cp C:\Windows\System32\wbem\WMIC.exe C:\Windows\Temp\RtkBtManServ.exe` was the original argument without any type of encoding involved. 
 
