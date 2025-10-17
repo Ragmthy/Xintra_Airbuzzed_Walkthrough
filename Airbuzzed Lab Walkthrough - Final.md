@@ -433,7 +433,7 @@ Here, we see our staging 'Temp' folder where all downloads from the Threat's dom
 
 ![image](lab_qns_images/39_flag_for_settings.jpg)
 
-The command in the first snapshot speaks of retrieving out Windows Defender preferences that are set up in ABZ-PC-01. Amongst them is the setting for ExclusionPath. These settings are checked at 20:43:20, June 19th 2024, and the exclusion path was set at 20:46:38 of the same day. 
+The command in the first snapshot speaks of retrieving out Windows Defender preferences that are set up in ABZ-PC-01. Amongst them is the setting for ExclusionPath. These settings are checked at 20:43:20, June 19th 2024, and the exclusion path was set at 20:46:38 of the same day (you might need to consider rounding up the seconds value for the flag XINTRA asks for). 
 
 The same can be witnessed in the ELK stack as well. 
 
@@ -624,6 +624,7 @@ Finally, the last threat actor tool of interest is the one from the earlier sect
 It's a known malicious DLL used by attackers to execute PowerShell commands more stealthily, and isn't all that normal in legitimate Windows Operations. 
 
 ##### And that concludes this portion on Threat Actor's Arsenal and the entire Airbuzzed Lab! Thanks for reading this far ~
+
 
 
 
